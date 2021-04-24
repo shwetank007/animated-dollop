@@ -3,7 +3,7 @@
     var counter = 1;
     function addAnotherBlock() {
         // Disable Add Another URL
-        document.getElementById("addURL").disabled = true;
+        document.getElementById("add-url").disabled = true;
 
         // Creation and selection of elements
         var newDiv = document.createElement('div');
@@ -29,6 +29,18 @@
         referenceNode.after(newDiv);
 
         // Enable Add Another URL Button
-        document.getElementById("addURL").disabled = false;
+        document.getElementById("add-url").disabled = false;
+    }
+
+    function startCrawling() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('Success');
+            }
+        };
+        xhttp.open("POST", `{{ route('search.store') }}`, true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send();
     }
 </script>
