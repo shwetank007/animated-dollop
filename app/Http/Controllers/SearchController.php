@@ -52,10 +52,14 @@ class SearchController extends Controller
         //
     }
 
+    /**
+     * Show search result.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function searchList(Request $request)
     {
         return view('content.search-page');
     }
-
-    
 }
