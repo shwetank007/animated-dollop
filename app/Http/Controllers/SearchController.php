@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use function Rap2hpoutre\RemoveStopWords\remove_stop_words;
 use App\Models\Search;
+use Exception;
+use DB;
+use Log;
 
 class SearchController extends Controller
 {
@@ -49,7 +52,32 @@ class SearchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $urlArray = explode(",", $request->url);
+        
+        foreach($urlArray as $url) {
+            $content = file_get_contents($url);
+            preg_match('/<title[^>]*>(.*?)<\/title>/s', $content, $title);
+            preg_match("/<body[^>]*>(.*?)<\/body>/is", $content, $body);
+
+            try {
+                Search::create([
+                    'title' => $title[1],
+                    'description' => $body[1],
+                    'url' => $url,
+                ]);
+            } catch(Exception $e) {
+                DB::rollBack();
+
+                return response()->json([
+                    'error' => $e,
+                ]);
+            }
+    
+            DB::commit();
+            sleep(1);
+        }
+
+        return response()->json(['status' => '200']);
     }
 
     /**
