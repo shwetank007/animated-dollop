@@ -1,6 +1,7 @@
 @extends('master')
 
 @section('content')
+    <div id="loader"></div>
     <div class="center block-1">
         <label>Enter the URL</label>
         <input type="text" name="url-1">

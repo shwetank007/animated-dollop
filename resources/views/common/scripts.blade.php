@@ -2,8 +2,10 @@
 <script type="text/javascript">
     var counter = 1;
     function addAnotherBlock() {
+        document.getElementById("loader").style.display = "block";
         // Disable Add Another URL
         document.getElementById("add-url").disabled = true;
+        document.getElementById("crawling-btn").disabled = true;
 
         // Creation and selection of elements
         var newDiv = document.createElement('div');
@@ -30,11 +32,15 @@
 
         // Enable Add Another URL Button
         document.getElementById("add-url").disabled = false;
+        document.getElementById("crawling-btn").disabled = false;
+        document.getElementById("loader").style.display = "none";
     }
 
     function startCrawling() {
+        document.getElementById("loader").style.display = "block";
         // Disable Start Crawling URL Button
         document.getElementById("crawling-btn").disabled = true;
+        document.getElementById("add-url").disabled = true;
         
         var xhttp = new XMLHttpRequest();
 
@@ -64,13 +70,17 @@
                     newParagraph.innerHTML = 'Successfully Crawled '+counter+' pages';
                     newDiv.appendChild(newParagraph);
                     referenceNode.after(newDiv);
+                    document.getElementById("add-url").disabled = false;
                     document.getElementById("crawling-btn").disabled = false;
+                    document.getElementById("loader").style.display = "none";
                 } else {
                     newDiv.classList.add("center");
                     newParagraph.innerHTML = 'Successfully Crawled '+counter+' pages';
                     newDiv.appendChild(newParagraph);
                     referenceNode.after(newDiv);
+                    document.getElementById("add-url").disabled = false;
                     document.getElementById("crawling-btn").disabled = false;
+                    document.getElementById("loader").style.display = "none";
                 }
             }
         };
