@@ -41,6 +41,11 @@
         };
         xhttp.open("POST", `{{ route('search.store') }}`, true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send();
+        var arrayOfURL = [];
+
+        for (let i = 1; i <= counter; i++) {
+            arrayOfURL.push(document.getElementsByName(`url-${i}`)[0].value);
+        }
+        xhttp.send(`url=${arrayOfURL}`);
     }
 </script>
