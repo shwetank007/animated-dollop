@@ -33,16 +33,53 @@
     }
 
     function startCrawling() {
+        // Disable Start Crawling URL Button
+        document.getElementById("crawling-btn").disabled = true;
+        
         var xhttp = new XMLHttpRequest();
+
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log('Success');
+                // Creation and selection of elements
+                var referenceNode = document.querySelector(`.block-${counter}`);
+                var result = JSON.parse(this.responseText);
+                var removeChild = document.querySelector('.result');
+                var newDiv = document.createElement('div');
+                var newParagraph = document.createElement('p');
+                
+                /* 
+                Removal of child messages if present. Suppose if you've done the
+                crawling first time successfully then the message will be successfully
+                crawled but if you again send different set of URL and that particular is
+                failed then the success message will be removed and error message will show.
+                Basically, I am removing child.
+                */
+                while(removeChild.firstChild) {
+                    removeChild.removeChild(removeChild.firstChild);
+                }
+
+                // Check if the crawling is success or not.
+                if (result.status == 200) {
+                    newDiv.classList.add("center");
+                    newParagraph.innerHTML = 'Successfully Crawled '+counter+' pages';
+                    newDiv.appendChild(newParagraph);
+                    referenceNode.after(newDiv);
+                    document.getElementById("crawling-btn").disabled = false;
+                } else {
+                    newDiv.classList.add("center");
+                    newParagraph.innerHTML = 'Successfully Crawled '+counter+' pages';
+                    newDiv.appendChild(newParagraph);
+                    referenceNode.after(newDiv);
+                    document.getElementById("crawling-btn").disabled = false;
+                }
             }
         };
+
         xhttp.open("POST", `{{ route('search.store') }}`, true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         var arrayOfURL = [];
 
+        // Looping all the input value and sending via xhttp request
         for (let i = 1; i <= counter; i++) {
             arrayOfURL.push(document.getElementsByName(`url-${i}`)[0].value);
         }

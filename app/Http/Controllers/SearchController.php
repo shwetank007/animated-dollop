@@ -68,9 +68,7 @@ class SearchController extends Controller
             } catch(Exception $e) {
                 DB::rollBack();
 
-                return response()->json([
-                    'error' => $e,
-                ]);
+                return response()->json(['status' => '400']);
             }
     
             DB::commit();
