@@ -6,7 +6,7 @@
         <input type="text" name="url-1">
     </div>
     <div class="center">
-        <button id="addURL" onclick="addAnotherBlock()">Add Another URL</button>
-        <button>Start Crawling URL</button>
+        <button id="add-url" onclick="addAnotherBlock()">Add Another URL</button>
+        <button id="crawling-btn" onclick="startCrawling()">Start Crawling URL</button>
     </div>
-@endsection    
+@endsection
