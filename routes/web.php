@@ -16,7 +16,9 @@ use App\Http\Controllers\SearchController;
 
 Route::redirect('/', '/search');
 
-Route::get('/search-page', [SearchController::class, 'searchList'])->name('search.list');
+Route::get('/search-page', [SearchController::class, 'searchPage'])->name('search.page');
+
+Route::post('/search-result', [SearchController::class, 'searchResult'])->name('search.result');
 
 Route::resource('search', SearchController::class)->only([
     'index', 'create', 'store'

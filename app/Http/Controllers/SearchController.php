@@ -21,17 +21,6 @@ class SearchController extends Controller
         $searchURL = Search::all();
 
         return view('content.index', ['searchURL' => $searchURL]);
-        // return view('content.index');
-        /*
-        // Remove Stop Words
-        $xyz = remove_stop_words('Some person have, curly black hair, tightly pulled back');
-        // Remove full stop and commas.
-        $in = str_replace(array('.', ','), '' , $xyz);
-        // Remove extra spaces
-        $input = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $in)));
-        
-        dd($input);
-        */
     }
 
     /**
@@ -55,7 +44,20 @@ class SearchController extends Controller
         $urlArray = explode(",", $request->url);
         
         foreach($urlArray as $url) {
-            $content = file_get_contents($url);
+            /* 
+            Addition of User-Agent helps crawl the page as lot of the site prevent
+            their site by the script crawler. This trick the site in letting them
+            know that a human is surfing their site not a script.
+            */ 
+            $context = stream_context_create(
+                [
+                    "http" => [
+                        "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+                    ]
+                ]
+            );
+            
+            $content = file_get_contents($url, false, $context);
             preg_match('/<title[^>]*>(.*?)<\/title>/s', $content, $title);
             preg_match("/<body[^>]*>(.*?)<\/body>/is", $content, $body);
 
@@ -79,13 +81,39 @@ class SearchController extends Controller
     }
 
     /**
-     * Show search result.
+     * Show search Page.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function searchList(Request $request)
+    public function searchPage()
     {
         return view('content.search-page');
+    }
+
+    /**
+     * Show search Result.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function searchResult(Request $request)
+    {
+        // Remove Stop Words
+        $searchStopWordRemove = remove_stop_words($request->search);
+        // Remove full stop and commas.
+        $searchFullStopAndCommaRemove = str_replace(array('.', ','), '' , $searchStopWordRemove);
+        // Remove extra spaces
+        $searchExtraSpaceRemove = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $searchFullStopAndCommaRemove)));
+        // Explode the sentence to get array of word
+        $explodeSearchWord = explode(" ", $searchExtraSpaceRemove);
+
+        $searchLinkQuery = Search::query();
+
+        foreach($explodeSearchWord as $word) {
+            $searchLinkQuery->orWhere('description', 'LIKE', '%'.$word.'%');
+        }
+
+        $searchResult = $searchLinkQuery->select('title', 'url')->get();
+
+        return response()->json(['status' => '200', 'data' => $searchResult]);
     }
 }

@@ -3,7 +3,7 @@
 @section('content')
     @if(count($searchURL) > 0)
         <div>
-            <p>URL are crawled and present over database. Please click on <a href="{{ route('search.index') }}">Search</a> to search.</p>
+            <p>URL are crawled and present over database. Please click on <a href="{{ route('search.page') }}">Search</a> to search.</p>
         </div>
     @else
     <div>
