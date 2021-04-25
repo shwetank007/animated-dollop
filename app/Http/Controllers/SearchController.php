@@ -7,7 +7,6 @@ use function Rap2hpoutre\RemoveStopWords\remove_stop_words;
 use App\Models\Search;
 use Exception;
 use DB;
-use Log;
 
 class SearchController extends Controller
 {
