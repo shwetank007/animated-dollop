@@ -23,6 +23,7 @@ CSS File - resources/css/app.css
 JS File - views/common/scripts.blade.js
 Master File - views/master.blade.js
 Index File - views/content/index.blade.js
+MYSQL Dump File - media_net_app.sql
 
 ##Third Party Library Used
 https://github.com/rap2hpoutre/remove-stop-words
